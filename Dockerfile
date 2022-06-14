@@ -1,9 +1,11 @@
-FROM alpine:3.8
-LABEL maintainer="Stille <stille@ioiox.com>"
+FROM alpine:3.13.4
+LABEL maintainer="rangh <rangh@foxmail.com>"
 
 ENV VERSION 0.43.0
 ENV TZ=Asia/Shanghai
 WORKDIR /
+
+RUN sed -i 's/dl-cdn.alpinelinux.org/mirrors.ustc.edu.cn/g' /etc/apk/repositories
 
 RUN apk add --no-cache tzdata \
     && ln -snf /usr/share/zoneinfo/${TZ} /etc/localtime \
@@ -13,11 +15,12 @@ RUN if [ "$(uname -m)" = "x86_64" ]; then export PLATFORM=amd64 ; else if [ "$(u
 	&& wget --no-check-certificate https://github.com/fatedier/frp/releases/download/v${VERSION}/frp_${VERSION}_linux_${PLATFORM}.tar.gz \ 
 	&& tar xzf frp_${VERSION}_linux_${PLATFORM}.tar.gz \
 	&& cd frp_${VERSION}_linux_${PLATFORM} \
-	&& mkdir /frp \
-	&& mv frps frps.ini /frp \
+	&& mkdir -p /var/app/frp \
+	&& mv frps /var/app/frp \
+	&& mv frpc /var/app/frp \
+	&& mkdir -p /var/app/frp/config \
+	&& mv frps.ini /var/app/frp/config \
 	&& cd .. \
 	&& rm -rf *.tar.gz frp_${VERSION}_linux_${PLATFORM}
 
-VOLUME /frp
-
-CMD /frp/frps -c /frp/frps.ini
+CMD /var/app/frp/frps -c /var/app/frp/config/frps.ini

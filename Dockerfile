@@ -24,3 +24,5 @@ RUN if [ "$(uname -m)" = "x86_64" ]; then export PLATFORM=amd64 ; else if [ "$(u
 	&& rm -rf *.tar.gz frp_${VERSION}_linux_${PLATFORM}
 
 CMD /var/app/frp/frps -c /var/app/frp/config/frps.ini
+
+EXPOSE 7000

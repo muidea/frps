@@ -15,14 +15,14 @@ RUN if [ "$(uname -m)" = "x86_64" ]; then export PLATFORM=amd64 ; else if [ "$(u
 	&& wget --no-check-certificate https://github.com/fatedier/frp/releases/download/v${VERSION}/frp_${VERSION}_linux_${PLATFORM}.tar.gz \ 
 	&& tar xzf frp_${VERSION}_linux_${PLATFORM}.tar.gz \
 	&& cd frp_${VERSION}_linux_${PLATFORM} \
-	&& mkdir -p /var/app/frp \
-	&& mv frps /var/app/frp \
-	&& mv frpc /var/app/frp \
-	&& mkdir -p /var/app/frp/config \
-	&& mv frps.ini /var/app/frp/config \
+	&& mkdir -p /var/app \
+	&& mv frps /var/app \
+	&& mv frpc /var/app \
+	&& mkdir -p /var/app/config \
+	&& mv frps.ini /var/app/config \
 	&& cd .. \
 	&& rm -rf *.tar.gz frp_${VERSION}_linux_${PLATFORM}
 
-CMD /var/app/frp/frps -c /var/app/frp/config/frps.ini
+CMD /var/app/frps -c /var/app/config/frps.ini
 
 EXPOSE 7000

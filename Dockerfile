@@ -20,9 +20,13 @@ RUN if [ "$(uname -m)" = "x86_64" ]; then export PLATFORM=amd64 ; else if [ "$(u
 	&& mv frpc /var/app \
 	&& mkdir -p /var/app/config \
 	&& mv frps.ini /var/app/config \
+    && mv frpc.ini /var/app/config \
 	&& cd .. \
 	&& rm -rf *.tar.gz frp_${VERSION}_linux_${PLATFORM}
 
-CMD /var/app/frps -c /var/app/config/frps.ini
+ADD bootstrap.sh /var/app/bootstrap.sh
+RUN chmod +x /var/app/bootstrap.sh
+
+ENTRYPOINT [ "/var/app/bootstrap.sh" ]
 
 EXPOSE 7000
